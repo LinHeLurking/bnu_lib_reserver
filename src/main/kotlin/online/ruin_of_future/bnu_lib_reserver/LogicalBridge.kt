@@ -87,7 +87,16 @@ object LogicalBridge {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun getFormString(src: Any): String {
-        TODO("Not implemented")
+    fun <T : Any> getFormString(src: T): String {
+        val members = src::class.memberProperties.toList()
+        val ret = StringBuilder()
+        for (i in members.indices) {
+            ret.append(members[i].name + "=")
+            ret.append(members[i].getter.call(src))
+            if (i < members.size - 1) {
+                ret.append("&")
+            }
+        }
+        return ret.toString()
     }
 }
